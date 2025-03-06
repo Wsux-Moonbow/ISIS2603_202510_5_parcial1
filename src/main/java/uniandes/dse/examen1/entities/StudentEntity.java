@@ -36,11 +36,13 @@ public class StudentEntity {
      * Each record indicates the semester, the course, and the final grade of the
      * student in the course.
      */
-    // TODO
+    @OneToMany(mappedBy = "student")
+    private List<RecordEntity> records;
 
     /**
      * A list of all the courses that the student has ever taken. No course should
      * appear more than once in this list.
      */
-    // TODO
+    @ManyToMany(mappedBy = "students")
+    private List<CourseEntity> courses;
 }

@@ -23,10 +23,11 @@ public class StatsService {
 
     public Double calculateStudentAverage(String login) {
         // TODO
+        
     }
 
     public Double calculateCourseAverage(String courseCode) {
-        r// TODO
+        // TODO
     }
 
 }

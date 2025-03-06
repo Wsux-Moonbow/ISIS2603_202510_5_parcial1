@@ -37,11 +37,26 @@ public class CourseServiceTest {
 
     @Test
     void testCreateRecordMissingCourse() {
-        // TODO
+        CourseEntity newCourse = factory.manufacturePojo(CourseEntity.class);
+    newCourse.setCourseCode("CURSO404");
+    try {
+        CourseEntity createdCourse = courseService.createCourse(newCourse);
+        assertEquals("CURSO404", createdCourse.getCourseCode(), "El código del curso no coincide");
+    } catch (RepeatedCourseException e) {
+        fail("No debería lanzarse una excepción en un caso válido");
+    }
     }
 
     @Test
     void testCreateRepeatedCourse() {
-        // TODO
+        CourseEntity newCourse = factory.manufacturePojo(CourseEntity.class);
+        newCourse.setCourseCode("CURSO123");
+        try {
+            courseService.createCourse(newCourse);
+            courseService.createCourse(newCourse);
+            fail("Se esperaba una RepeatedCourseException");
+        } catch (RepeatedCourseException e) {
+            assertEquals("El curso con el codigo CURSO123 ya existe", e.getMessage());
+        }
     }
 }

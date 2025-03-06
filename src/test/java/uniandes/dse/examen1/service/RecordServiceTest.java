@@ -68,7 +68,19 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateRecord() {
-        // TODO
+        try {
+            String semester = "2024-1";
+            Double grade = 4.0;
+            RecordEntity record = recordService.createRecord(login, courseCode, grade, semester);
+    
+            assertEquals(login, record.getStudent().getLogin(), "El login del estudiante no coincide");
+            assertEquals(courseCode, record.getCourse().getCourseCode(), "El codigo del curso no coincide");
+            assertEquals(grade, record.getFinalGrade(), "La nota final no coincide");
+            assertEquals(semester, record.getSemester(), "El semestre no coincide");
+        } catch (InvalidRecordException e) {
+            fail("No deberia lanzarse una excepcion en un caso valido");
+        }
+    }
     }
 
     /**
@@ -76,7 +88,12 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateRecordMissingStudent() {
-        // TODO
+        try {
+            recordService.createRecord("noExiste", courseCode, 3.5, "2024-1");
+            fail("Se esperaba una InvalidRecordException");
+        } catch (InvalidRecordException e) {
+            assertEquals("El estudiante con el login noExiste no existe", e.getMessage());
+        }
     }
 
     /**
@@ -84,7 +101,12 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateInscripcionMissingCourse() {
-        // TODO
+        try {
+            recordService.createRecord(login, "CURSO404", 3.5, "2024-1");
+            fail("Se esperaba una InvalidRecordException");
+        } catch (InvalidRecordException e) {
+            assertEquals("El curso con el codigo CURSO404 no existe", e.getMessage());
+        }
     }
 
     /**
@@ -92,7 +114,12 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateInscripcionWrongGrade() {
-        // TODO
+        try {
+            recordService.createRecord(login, courseCode, 1.0, "2024-1");
+            fail("Se esperaba una InvalidRecordException por nota inválida");
+        } catch (InvalidRecordException e) {
+            
+        }
     }
 
     /**
@@ -101,8 +128,15 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateInscripcionRepetida1() {
-        // TODO
+        try {
+            recordService.createRecord(login, courseCode, 4.5, "2024-1");
+            recordService.createRecord(login, courseCode, 3.0, "2024-2");
+            fail("Se esperaba una InvalidRecordException porque el estudiante ya aprobó");
+        } catch (InvalidRecordException e) {
+            
+        }
     }
+    
 
     /**
      * Tests the creation of a record when the student already has a record for the
@@ -110,6 +144,11 @@ public class RecordServiceTest {
      */
     @Test
     void testCreateInscripcionRepetida2() {
-        // TODO
+        try {
+            recordService.createRecord(login, courseCode, 2.0, "2024-1");
+            recordService.createRecord(login, courseCode, 3.0, "2024-2");
+        } catch (InvalidRecordException e) {
+            fail("No debería lanzarse una excepción, el estudiante no ha aprobado aún");
+        }
     }
 }
